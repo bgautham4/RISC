@@ -10,7 +10,9 @@ typedef struct Node_queue{
     struct Node_queue *next;
 }Nqueue;
 
-int enqueue(Nqueue *,Node);
-void traverse(Nqueue *);
-int dequeue(Nqueue **);
 
+
+void enqueue(Nqueue *,Node);
+void traverse(Nqueue *);
+void dequeue(Nqueue **);
+Node * link_nodes_to(Node *,Node *,char);
