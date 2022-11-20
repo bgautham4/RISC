@@ -18,8 +18,30 @@ int main(){
     Node *b = link_nodes_to(f,NULL,'B');
     Node *a = link_nodes_to(b,e,'A');
     Node *root = link_nodes_to(a,c,'S'); //Source Node
+    /*This is the defined binary tree:
+S
+├── A
+│   ├── B
+│   │   └── F
+│   │       ├── K
+│   │       └── L
+│   └── E
+│       ├── G
+│       └── H
+│           ├── O
+│           └── M
+└── C
+    └── D
+        ├── I
+        └── J
+            └── N
+    */
     char *path;
-    path = BFS(root,'N');
+    char input;
+    printf("Enter the node to find (Note: Input is case sensitive!!) (A-O) : ");
+    scanf("%c",&input);
+    path = BFS(root,input);
+    printf("Path to node %c is (S is the root node):",input);
     display_path(path);
     return 0;
 }
