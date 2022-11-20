@@ -59,3 +59,53 @@ Node * link_nodes_to(Node *child1,Node *child2,char parent_val){
     }
     return parent_node;
 }
+
+char * BFS(Node *root,char elem){
+    Nqueue *queue = (Nqueue *)malloc(sizeof(Nqueue));
+    char *path = (char *)malloc((int) sizeof(char)*10);
+    Node *child1 = root->c1;
+    Node *child2 = root->c2;
+    Node *backtrack_node;
+    char check = root->elem;
+    queue->node = *(root);
+    queue->next = NULL;
+    while (check != elem){
+        if (child1 != NULL){
+            enqueue(queue,*(child1));
+        }
+        if (child2 != NULL){
+            enqueue(queue,*(child2));
+        }
+        dequeue(&queue);
+        check = queue->node.elem;
+        child1 = queue->node.c1;
+        child2 = queue->node.c2;
+    }
+    *(path) = queue->node.elem;
+    int i = 1;
+    backtrack_node = queue->node.p;
+    while (backtrack_node != NULL){
+        *(path + i) = backtrack_node->elem;
+        backtrack_node = backtrack_node->p;
+        i++;
+    }
+    *(path+i) = '\0';
+    free(queue);
+    return path;
+}
+
+void display_path(char *str){
+    char *ptr = str;
+    int i=0;
+    while((*ptr)!='\0'){
+        ptr++;
+        i++;
+    }
+    int j = 1;
+    while(j<=i){
+        printf("%c ",*(ptr-j));
+        j++;
+    }
+    printf("\n");
+    return;
+}

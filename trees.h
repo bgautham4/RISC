@@ -16,3 +16,5 @@ void enqueue(Nqueue *,Node);
 void traverse(Nqueue *);
 void dequeue(Nqueue **);
 Node * link_nodes_to(Node *,Node *,char);
+char * BFS(Node *,char);
+void display_path(char *);

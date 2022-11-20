@@ -2,13 +2,24 @@
 #include "trees.h"
 #include<stdlib.h>
 int main(){
-    Node *c1 = (Node *)malloc(sizeof(Node));
-    c1->elem = 'B';
-    Node *c2 = (Node *)malloc(sizeof(Node));
-    c2->elem = 'C';
-    Node *root = (Node *)malloc(sizeof(Node));
-    root = link_nodes_to(c1,c2,'A'); //Link 2 children node c1 and c2 to A.
-    printf("Root node %c has children %c and %c \n",root->elem,root->c1->elem,root->c2->elem);
-    printf("c1's parent is %c\n",c1->p->elem);
+    Node *n = link_nodes_to(NULL,NULL,'N');
+    Node *j = link_nodes_to(n,NULL,'J');
+    Node *i = link_nodes_to(NULL,NULL,'I');
+    Node *d = link_nodes_to(i,j,'D');
+    Node *c = link_nodes_to(d,NULL,'C');
+    Node *o = link_nodes_to(NULL,NULL,'O');
+    Node *m = link_nodes_to(NULL,NULL,'M');
+    Node *h = link_nodes_to(o,m,'H');
+    Node *g = link_nodes_to(NULL,NULL,'G');
+    Node *e = link_nodes_to(g,h,'E');
+    Node *k = link_nodes_to(NULL,NULL,'K');
+    Node *l = link_nodes_to(NULL,NULL,'L');
+    Node *f = link_nodes_to(k,l,'F');
+    Node *b = link_nodes_to(f,NULL,'B');
+    Node *a = link_nodes_to(b,e,'A');
+    Node *root = link_nodes_to(a,c,'S'); //Source Node
+    char *path;
+    path = BFS(root,'N');
+    display_path(path);
     return 0;
 }
