@@ -31,7 +31,9 @@ void dequeue(Nqueue **head_ptr){
    else{
     //Nqueue **head_ptr = (Nqueue **)malloc(sizeof(Nqueue*));
     Nqueue *temp = (*head_ptr)->next;
+    Nqueue *del = (*head_ptr);
     *head_ptr = temp;
+    free(del);
     return;
    } 
 }
