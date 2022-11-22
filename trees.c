@@ -91,8 +91,10 @@ char * BFS(Node *root,char elem){
         backtrack_node = backtrack_node->p;
         i++;
     }
-    *(path+i) = '\0';
-    free(queue);
+    *(path+i) = '\0';    
+    while (queue != NULL){
+	    dequeue(&queue); //Remove all elements from the queue and free up the memory.
+    }
     return path;
 }
 
