@@ -1,115 +1,113 @@
 #include<stdio.h>
-#include "trees.h"
 #include<stdlib.h>
+#include "trees.h"
 
-void enqueue(Nqueue *head,Node node){
-    Nqueue *next = head->next;
-    Nqueue *new = (Nqueue *)malloc(sizeof(Nqueue));
-    //printf("New location @ %p\n",new);
-    if (new==NULL){
-        printf("An error in mem allocation occured! Exiting..");
+void enqueue(NQueue *queue, Node *node) {
+    //Make new queue node and <node> into element
+    QueueNode *qnode = (QueueNode*)malloc(sizeof(QueueNode));
+    if (qnode == NULL) {
+        printf("Failed to allocate memory in enque()\n");
+        exit(EXIT_FAILURE);
+    }    
+    qnode->qelem = node;
+    qnode->next = NULL;
+    if (queue->size == 0) {
+        queue->top = qnode;
+        queue->size += 1;
         return;
     }
-    else{
-        new->node = node;
-        new->next = NULL;
+    QueueNode *qn_ptr = queue->top;
+    for (size_t i = 1; i<queue->size; ++i) {
+        qn_ptr = qn_ptr->next;
     }
-    while (next!=NULL){
-        head = next;
-        next = head->next;
-    }
-    head->next = new;
-    return;
+    qn_ptr->next = qnode;
+    queue->size += 1;
 }
 
-void dequeue(Nqueue **head_ptr){
-   if(*(head_ptr)==NULL){
-    printf("Queue is already empty!");
-    return;
-   }
-
-   else{
-    //Nqueue **head_ptr = (Nqueue **)malloc(sizeof(Nqueue*));
-    Nqueue *temp = (*head_ptr)->next;
-    Nqueue *del = (*head_ptr);
-    *head_ptr = temp;
-    free(del);
-    return;
-   } 
+void dequeue(NQueue *queue) {
+    if (queue->size == 0) {
+        printf("Queue is already empty!!\n");
+        return;
+    }
+    QueueNode *prev_top = queue->top;
+    queue->top = prev_top->next;
+    queue->size -= 1;
+    free(prev_top);
 }
 
-void traverse(Nqueue *head){
-    while (head!=NULL){
-        //printf("current addr: %p value: %d next_elements addr: %p \n",head,head->elem,head->next);
-        printf("Node elem = %c\n",head->node.elem);
-        head = head->next;
+void traverse(NQueue *queue) {
+    QueueNode *qn_ptr = queue->top;
+    for (size_t i = 1; i<queue->size; ++i) {
+        printf("Node elem = %c\n",qn_ptr->qelem->elem);
+        qn_ptr = qn_ptr->next;
     }
     printf("\n");
     return;
 }
 
-Node * link_nodes_to(Node *child1,Node *child2,char parent_val){
+Node *link_nodes_to(Node *child_1,Node *child_2,char parent_elem){
     Node *parent_node = (Node *)malloc(sizeof(Node));
-    parent_node->c1 = child1;
-    parent_node->c2 = child2;
-    parent_node->elem = parent_val;
-    if(child1!=NULL){
-        child1->p = parent_node;
+    if (parent_node == NULL) {
+        printf("Failed to allocate memory in link_nodes_to()\n");
+        exit(EXIT_FAILURE);
     }
-    if(child2!=NULL){
-        child2->p = parent_node;
+    parent_node->c1 = child_1;
+    parent_node->c2 = child_2;
+    parent_node->elem = parent_elem;
+    if(child_1!=NULL){
+        child_1->p = parent_node;
+    }
+    if(child_2!=NULL){
+        child_2->p = parent_node;
     }
     return parent_node;
 }
 
-char * BFS(Node *root,char elem){
-    Nqueue *queue = (Nqueue *)malloc(sizeof(Nqueue));
-    char *path = (char *)malloc((int) sizeof(char)*10);
-    Node *child1 = root->c1;
-    Node *child2 = root->c2;
-    Node *backtrack_node;
+Path BFS(Node *root,char elem){
+    NQueue queue = {NULL, 0};
+    Node *child_1 = root->c1;
+    Node *child_2 = root->c2;
     char check = root->elem;
-    queue->node = *(root);
-    queue->next = NULL;
+    enqueue(&queue, root);
     while (check != elem){
-        if (child1 != NULL){
-            enqueue(queue,*(child1));
+        if (child_1 != NULL){
+            enqueue(&queue,child_1);
         }
-        if (child2 != NULL){
-            enqueue(queue,*(child2));
+        if (child_2 != NULL){
+            enqueue(&queue, child_2);
         }
         dequeue(&queue);
-        check = queue->node.elem;
-        child1 = queue->node.c1;
-        child2 = queue->node.c2;
+        check = queue.top->qelem->elem;
+        child_1 = queue.top->qelem->c1;
+        child_2 = queue.top->qelem->c2;
     }
-    *(path) = queue->node.elem;
-    int i = 1;
-    backtrack_node = queue->node.p;
-    while (backtrack_node != NULL){
-        *(path + i) = backtrack_node->elem;
+    
+    Node *backtrack_node = queue.top->qelem; //To trace back upto parent
+    char *path_chr_buff = (char*)malloc(100); //str buffer for Path struct
+    if (path_chr_buff == NULL) {
+        printf("Failed to allocate memory for chr_buff in BFS()\n");
+        exit(EXIT_FAILURE);
+    }
+    size_t depth = 0;
+    while (backtrack_node != NULL) {
+        path_chr_buff[depth] = backtrack_node->elem;
         backtrack_node = backtrack_node->p;
-        i++;
+        ++depth;
     }
-    *(path+i) = '\0';    
-    while (queue != NULL){
-	    dequeue(&queue); //Remove all elements from the queue and free up the memory.
+    path_chr_buff[depth] = '\0';    
+    Path path = {path_chr_buff, depth - 1};
+
+    //Clean up queue
+    while (queue.size > 0) {
+        dequeue(&queue);
     }
+
     return path;
 }
 
-void display_path(char *str){
-    char *ptr = str;
-    int i=0;
-    while((*ptr)!='\0'){
-        ptr++;
-        i++;
-    }
-    int j = 1;
-    while(j<=i){
-        printf("%c ",*(ptr-j));
-        j++;
+void display_path(const Path *path) {
+    for (size_t i = 0; i <= path->depth; ++i) {
+        printf("%c ", path->chr_buff[path->depth - i]);
     }
     printf("\n");
-    return;
 }

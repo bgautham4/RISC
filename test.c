@@ -1,7 +1,8 @@
 #include<stdio.h>
-#include "trees.h"
 #include<stdlib.h>
-int main(){
+#include "trees.h"
+
+int main() {
     Node *n = link_nodes_to(NULL,NULL,'N');
     Node *j = link_nodes_to(n,NULL,'J');
     Node *i = link_nodes_to(NULL,NULL,'I');
@@ -36,12 +37,12 @@ S
         └── J
             └── N
     */
-    char *path;
     char input;
     printf("Enter the node to find (Note: Input is case sensitive!!) (A-O) : ");
     scanf("%c",&input);
-    path = BFS(root,input);
+    Path path = BFS(root,input);
     printf("Path to node %c is (S is the root node):",input);
-    display_path(path);
-    return 0;
+    display_path(&path);
+    free(path.chr_buff);
+    exit(EXIT_SUCCESS);
 }
