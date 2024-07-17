@@ -15,19 +15,19 @@ typedef struct QueueNode {
     struct QueueNode *next;
 }QueueNode;
 
-typedef struct NodeQueue {
+typedef struct Queue {
     QueueNode *top;
     size_t size;
-}NQueue;
+}Queue;
 
 typedef struct Path {
     char *chr_buff;
     size_t depth;
 }Path;
 
-void enqueue(NQueue *queue, Node *node);
-void traverse(NQueue *queue);
-void dequeue(NQueue *queue);
+void enqueue(Queue *queue, Node *node);
+void traverse(Queue *queue);
+void dequeue(Queue *queue);
 
 Node *link_nodes_to(Node *child_1, Node *child_2, char parent_elem);
 

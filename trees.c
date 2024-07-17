@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include "trees.h"
 
-void enqueue(NQueue *queue, Node *node) {
+void enqueue(Queue *queue, Node *node) {
     //Make new queue node and <node> into element
     QueueNode *qnode = (QueueNode*)malloc(sizeof(QueueNode));
     if (qnode == NULL) {
@@ -24,7 +24,7 @@ void enqueue(NQueue *queue, Node *node) {
     queue->size += 1;
 }
 
-void dequeue(NQueue *queue) {
+void dequeue(Queue *queue) {
     if (queue->size == 0) {
         printf("Queue is already empty!!\n");
         return;
@@ -35,18 +35,17 @@ void dequeue(NQueue *queue) {
     free(prev_top);
 }
 
-void traverse(NQueue *queue) {
+void traverse(Queue *queue) {
     QueueNode *qn_ptr = queue->top;
     for (size_t i = 1; i<queue->size; ++i) {
         printf("Node elem = %c\n",qn_ptr->qelem->elem);
         qn_ptr = qn_ptr->next;
     }
     printf("\n");
-    return;
 }
 
-Node *link_nodes_to(Node *child_1,Node *child_2,char parent_elem){
-    Node *parent_node = (Node *)malloc(sizeof(Node));
+Node *link_nodes_to(Node *child_1,Node *child_2, char parent_elem){
+    Node *parent_node = (Node*)malloc(sizeof(Node));
     if (parent_node == NULL) {
         printf("Failed to allocate memory in link_nodes_to()\n");
         exit(EXIT_FAILURE);
@@ -63,8 +62,8 @@ Node *link_nodes_to(Node *child_1,Node *child_2,char parent_elem){
     return parent_node;
 }
 
-Path BFS(Node *root,char elem){
-    NQueue queue = {NULL, 0};
+Path BFS(Node *root, char elem){
+    Queue queue = {NULL, 0};
     Node *child_1 = root->c1;
     Node *child_2 = root->c2;
     char check = root->elem;
